@@ -1,5 +1,40 @@
 <html>
+  <script>
+    function getUrlParams( prop ) {
+        var params = {};
+        var search = decodeURIComponent( window.location.href.slice( window.location.href.indexOf( '?' ) + 1 ) );
+        var definitions = search.split( '&' );
+
+        definitions.forEach( function( val, key ) {
+            var parts = val.split( '=', 2 );
+            params[ parts[ 0 ] ] = parts[ 1 ];
+        } );
+
+        return ( prop && prop in params ) ? params[ prop ] : params;
+    }
+
+    window.onload = function() {
+      var body = document.querySelector('body')
+      var img = document.querySelector('#foo')
+      var div = document.querySelector('#bar')
+      var q = getUrlParams('q')
+      fetch('http://api.giphy.com/v1/gifs/search?api_key=tfU0MaxcLLw4fnT3ka8YTnd4tmpjE94N&q=' + q)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(json => {
+          var items = json.data
+          var selectedIndex = Math.round(Math.random(0,1)*items.length)
+          var item = items[selectedIndex]
+          // div.innerHTML = JSON.stringify(item.images.fixed_width, 0, 4)
+          img.src = item.images.fixed_height.url
+        })
+      // 
+      // body.innerHTML = 'foo'
+    }
+  </script>
   <body>
-    hi
+    <img id='foo' style='display: block; margin-left: auto; margin-right: auto; width: 80%;' src="" />
+    <div id='bar' />
   </body>
 </html>
